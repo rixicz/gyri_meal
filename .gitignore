@@ -4,4 +4,3 @@ __pycache__/
 venv/
 *.png
 *.jpg
-generate_image.py

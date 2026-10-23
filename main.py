@@ -3,6 +3,8 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+from generate_image import create_menu_image
+
 NTFY_URL = "https://ntfy.sh/gyri_meals"
 base = "http://remote.gyri.cz:81/webkredit/"  # ověř přesnou adresu
 url = base + "ZalozkaObjednavani.aspx"
@@ -75,5 +77,7 @@ if __name__ == "__main__":
         title = f"🍽 Oběd – {DNY[now.weekday()]} {now.day}. {now.month}."
         message = "\n\n".join(format_meal(it) for it in items)
         send_ntfy(title, message)
+        image_path = create_menu_image(message, title=title, output_path="menu.png")
+        print(f"Obrázek pro Instagram byl uložen do: {image_path}")
     else:
         print("Dnes žádné menu (víkend/prázdniny?), nic se neposílá.")

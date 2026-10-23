@@ -1,33 +1,32 @@
 name: Scheduled Python Execution
 
 on:
-schedule:
-# CRON čas (minuta hodina den měsíc den-v-týdnu)
-# Příklady:
-# '0 8 * * '   = Každý den v 08:00 UTC
-# '/30 * * * *' = Každých 30 minut
-- cron: '30 3 * * 1,2,3,4,5'
+  schedule:
+    # CRON čas (minuta hodina den měsíc den-v-týdnu)
+    # Příklady:
+    # '0 8 * * *'    = Každý den v 08:00 UTC
+    # '*/30 * * * *' = Každých 30 minut
+    - cron: '30 3 * * 1,2,3,4,5'
 
-
-workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
-run-script:
-runs-on: ubuntu-latest
+  run-script:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: Načtení kódu z repozitáře
-    uses: actions/checkout@v4
+    steps:
+      - name: Načtení kódu z repozitáře
+        uses: actions/checkout@v4
 
-  - name: Nastavení Pythonu
-    uses: actions/setup-python@v5
-    with:
-      python-version: '3.13'
+      - name: Nastavení Pythonu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
 
-  - name: Instalace závislostí
-    run: |
-      python -m pip install --upgrade pip
-      if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Instalace závislostí
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-  - name: Spuštění Python skriptu
-    run: python main.py
+      - name: Spuštění Python skriptu
+        run: python main.py

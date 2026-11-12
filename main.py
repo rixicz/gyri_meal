@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
+from generate_image import create_menu_image
 
 NTFY_URL = os.getenv("NTFY_KEY")
 base = "http://remote.gyri.cz:81/webkredit/"  # ověř přesnou adresu

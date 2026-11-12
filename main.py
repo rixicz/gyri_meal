@@ -1,9 +1,10 @@
 import re
+import os
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-NTFY_URL = "https://ntfy.sh/gyri_meals"
+NTFY_URL = os.getenv("NTFY_KEY")
 base = "http://remote.gyri.cz:81/webkredit/"  # ověř přesnou adresu
 url = base + "ZalozkaObjednavani.aspx"
 

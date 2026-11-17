@@ -4,3 +4,7 @@ __pycache__/
 venv/
 *.png
 *.jpg
+.vscode
+.github/workflows/
+*.json
+.python_packages

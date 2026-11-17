@@ -1,9 +1,15 @@
-import re
+import logging
 import os
-from datetime import datetime
+import re
+import tempfile
+from datetime import datetime, timezone
+
+import azure.functions as func
 import requests
 from bs4 import BeautifulSoup
 from generate_image import create_menu_image
+
+app = func.FunctionApp()
 
 NTFY_URL = os.getenv("NTFY_KEY")
 base = "http://remote.gyri.cz:81/webkredit/"  # ověř přesnou adresu
@@ -67,8 +73,11 @@ def send_ntfy(title, message):
     )
     r.raise_for_status()
 
+@app.timer_trigger(schedule="0 0 12 * * 1-5", arg_name="myTimer", run_on_startup=False)
+def send_daily_menu(myTimer: func.TimerRequest) -> None:
+    if myTimer.past_due:
+        logging.info("The timer is past due!")
 
-if __name__ == "__main__":
     meals = get_meals()
     now = datetime.now()
     items = meals.get(now.strftime("%d.%m.%Y")) or meals.get(now.strftime("%d.%m.%Y").lstrip("0"))
@@ -77,6 +86,7 @@ if __name__ == "__main__":
         title = f"🍽 Oběd – {DNY[now.weekday()]} {now.day}. {now.month}."
         message = "\n\n".join(format_meal(it) for it in items)
         send_ntfy(title, message)
+        temp_image_path = os.path.join(tempfile.gettempdir(), "menu.png")
         image_path = create_menu_image(message, title=title, output_path="menu.png")
         print(f"Obrázek pro Instagram byl uložen do: {image_path}")
     else:
